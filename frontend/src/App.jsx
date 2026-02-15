@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Header } from './components/Header';
 import { APISettings } from './components/APISettings';
 import { SinglePredictionForm } from './components/SinglePredictionForm';
@@ -50,7 +50,17 @@ const buildSinglePayload = (form) => ({
   TotalCharges: parseNumberField(form.TotalCharges, 'TotalCharges'),
 });
 
+const THEME_STORAGE_KEY = 'customerpulse-theme';
+
+const getInitialDarkMode = () => {
+  const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+  if (storedTheme === 'dark') return true;
+  if (storedTheme === 'light') return false;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+};
+
 export default function App() {
+  const [darkMode, setDarkMode] = useState(getInitialDarkMode);
   const [apiBaseUrl, setApiBaseUrl] = useState('http://127.0.0.1:8000');
   const [testStatus, setTestStatus] = useState('idle');
 
@@ -66,6 +76,33 @@ export default function App() {
   const [csvError, setCsvError] = useState('');
   const [csvRows, setCsvRows] = useState([]);
   const [csvInsights, setCsvInsights] = useState(null);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (darkMode) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [darkMode]);
+
+  useEffect(() => {
+    if (localStorage.getItem(THEME_STORAGE_KEY)) return undefined;
+
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleSystemThemeChange = (event) => setDarkMode(event.matches);
+    media.addEventListener('change', handleSystemThemeChange);
+
+    return () => media.removeEventListener('change', handleSystemThemeChange);
+  }, []);
+
+  const toggleDarkMode = () => {
+    setDarkMode((prev) => {
+      const next = !prev;
+      localStorage.setItem(THEME_STORAGE_KEY, next ? 'dark' : 'light');
+      return next;
+    });
+  };
 
   const handleApiUrlChange = async (newUrl) => {
     setApiBaseUrl(newUrl);
@@ -173,8 +210,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
-      <Header />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+      <Header darkMode={darkMode} onToggleDarkMode={toggleDarkMode} />
 
       <main className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
         <APISettings apiBaseUrl={apiBaseUrl} onChange={handleApiUrlChange} testStatus={testStatus} />
@@ -210,7 +247,7 @@ export default function App() {
           </div>
         )}
 
-        <footer className="border-t border-slate-200 pt-8 text-center text-sm text-slate-600">
+        <footer className="border-t border-slate-200 pt-8 text-center text-sm text-slate-600 dark:border-slate-700 dark:text-slate-400">
           <p>CustomerPulse AI © 2024 • Prédiction intelligente de churn client</p>
         </footer>
       </main>

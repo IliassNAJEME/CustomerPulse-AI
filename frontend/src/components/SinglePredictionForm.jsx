@@ -40,8 +40,8 @@ export function SinglePredictionForm({ onSubmit, loading, error, children }) {
         <div className="mb-6 flex items-start gap-3">
           <Zap className="mt-1 h-5 w-5 text-blue-600 flex-shrink-0" />
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">Prédiction individuelle</h2>
-            <p className="mt-1 text-slate-600">Analysez le risque de churn d'un client en temps réel</p>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Prédiction individuelle</h2>
+            <p className="mt-1 text-slate-600 dark:text-slate-400">Analysez le risque de churn d'un client en temps réel</p>
           </div>
         </div>
 

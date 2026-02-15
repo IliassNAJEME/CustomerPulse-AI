@@ -11,16 +11,16 @@ export function CSVUploadForm({ onSubmit, loading, error, message }) {
 
   const handleDragOver = (e) => {
     e.preventDefault();
-    e.currentTarget.classList.add('border-blue-400', 'bg-blue-50');
+    e.currentTarget.classList.add('border-blue-400', 'bg-blue-50', 'dark:bg-blue-900/30');
   };
 
   const handleDragLeave = (e) => {
-    e.currentTarget.classList.remove('border-blue-400', 'bg-blue-50');
+    e.currentTarget.classList.remove('border-blue-400', 'bg-blue-50', 'dark:bg-blue-900/30');
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    e.currentTarget.classList.remove('border-blue-400', 'bg-blue-50');
+    e.currentTarget.classList.remove('border-blue-400', 'bg-blue-50', 'dark:bg-blue-900/30');
     const file = e.dataTransfer.files?.[0];
     if (file?.type === 'text/csv' || file?.name.endsWith('.csv')) {
       onSubmit(file);
@@ -32,8 +32,8 @@ export function CSVUploadForm({ onSubmit, loading, error, message }) {
       <div className="mb-6 flex items-start gap-3">
         <Upload className="mt-1 h-5 w-5 text-blue-600 flex-shrink-0" />
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Analyse en lot (CSV)</h2>
-          <p className="mt-1 text-slate-600">Prédisez le risque pour plusieurs clients à la fois</p>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Analyse en lot (CSV)</h2>
+          <p className="mt-1 text-slate-600 dark:text-slate-400">Prédisez le risque pour plusieurs clients à la fois</p>
         </div>
       </div>
 
@@ -42,14 +42,14 @@ export function CSVUploadForm({ onSubmit, loading, error, message }) {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className="mb-6 flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center transition"
+        className="mb-6 flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center transition dark:border-slate-600 dark:bg-slate-800/70"
       >
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/40">
           <Upload className="h-6 w-6 text-blue-600" />
         </div>
         <div>
-          <p className="text-sm font-semibold text-slate-900">Déposez un fichier CSV ici</p>
-          <p className="mt-1 text-xs text-slate-600">ou</p>
+          <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">Déposez un fichier CSV ici</p>
+          <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">ou</p>
         </div>
         <button
           type="button"
@@ -67,7 +67,7 @@ export function CSVUploadForm({ onSubmit, loading, error, message }) {
           disabled={loading}
           className="hidden"
         />
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-500 dark:text-slate-400">
           Format accepté : CSV • Colonnes requises : Age, Gender, Tenure, MonthlyCharges, Contract, PaymentMethod, TotalCharges
         </p>
       </div>

@@ -25,9 +25,9 @@ export function PredictionResult({ result }) {
         <div className="card-elevated h-full p-6">
           <div className="flex h-full flex-col justify-between gap-4">
             <div>
-              <p className="text-sm font-medium text-slate-600">Risque de résiliation</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Risque de résiliation</p>
               <div className="mt-2 flex items-baseline gap-3">
-                <span className="text-4xl font-bold text-slate-900">{riskPercent}%</span>
+                <span className="text-4xl font-bold text-slate-900 dark:text-slate-100">{riskPercent}%</span>
                 <span className={`badge ${riskConfig.badge}`}>{riskConfig.label}</span>
               </div>
             </div>
@@ -49,18 +49,18 @@ export function PredictionResult({ result }) {
                 <PieChart>
                   <Pie data={chartData} dataKey="value" cx="50%" cy="50%" innerRadius={50} outerRadius={72}>
                     <Cell fill={riskConfig.color} />
-                    <Cell fill="#e5e7eb" />
+                    <Cell fill="var(--chart-surface)" />
                   </Pie>
                 </PieChart>
               </ResponsiveContainer>
             </div>
 
             <div className="space-y-2">
-              <div className="flex justify-between text-xs text-slate-600">
+              <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400">
                 <span>Aucun risque (0%)</span>
                 <span>Risque maximal (100%)</span>
               </div>
-              <div className="h-3 w-full overflow-hidden rounded-full bg-slate-200">
+              <div className="h-3 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
                 <div
                   className={`h-full transition-all duration-500 ${riskConfig.bar}`}
                   style={{ width: `${riskPercent}%` }}
@@ -74,7 +74,7 @@ export function PredictionResult({ result }) {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {result.top_drivers && result.top_drivers.length > 0 && (
           <div className="card h-full p-6">
-            <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-slate-900">
+            <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-slate-900 dark:text-slate-100">
               <TrendingUp className="h-5 w-5 text-blue-600" />
               Facteurs principaux
             </h3>
@@ -84,17 +84,17 @@ export function PredictionResult({ result }) {
                 const absShap = Math.abs(Number(driver.shap_value));
 
                 return (
-                  <div key={`${driver.feature}-${idx}`} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                  <div key={`${driver.feature}-${idx}`} className="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800">
                     <div className="mb-2 flex items-start justify-between gap-3">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-slate-900">{driver.feature}</span>
+                        <span className="font-semibold text-slate-900 dark:text-slate-100">{driver.feature}</span>
                         <span className={`badge ${isRiskIncreasing ? 'badge-danger' : 'badge-success'}`}>
                           {isRiskIncreasing ? 'Augmente' : 'Réduit'} le risque
                         </span>
                       </div>
-                      <span className="text-lg font-bold text-slate-700">{absShap.toFixed(3)}</span>
+                      <span className="text-lg font-bold text-slate-700 dark:text-slate-200">{absShap.toFixed(3)}</span>
                     </div>
-                    <p className="text-sm text-slate-700">{driver.human_explanation}</p>
+                    <p className="text-sm text-slate-700 dark:text-slate-300">{driver.human_explanation}</p>
                   </div>
                 );
               })}
@@ -104,15 +104,15 @@ export function PredictionResult({ result }) {
 
         {result.recommendations && result.recommendations.length > 0 && (
           <div className="card h-full p-6">
-            <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-slate-900">
+            <h3 className="mb-4 flex items-center gap-2 text-xl font-bold text-slate-900 dark:text-slate-100">
               <CheckCircle className="h-5 w-5 text-emerald-600" />
               Actions recommandées
             </h3>
             <ul className="space-y-2">
               {result.recommendations.map((rec, idx) => (
-                <li key={idx} className="flex gap-3 rounded-lg border border-emerald-200 bg-emerald-50 p-3">
-                  <span className="flex-shrink-0 font-semibold text-emerald-700">→</span>
-                  <span className="text-slate-700">{rec}</span>
+                <li key={idx} className="flex gap-3 rounded-lg border border-emerald-200 bg-emerald-50 p-3 dark:border-emerald-800 dark:bg-emerald-900/30">
+                  <span className="flex-shrink-0 font-semibold text-emerald-700 dark:text-emerald-300">→</span>
+                  <span className="text-slate-700 dark:text-slate-200">{rec}</span>
                 </li>
               ))}
             </ul>

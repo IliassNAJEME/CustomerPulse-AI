@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { TrendingUp, Users, AlertTriangle, Zap } from 'lucide-react';
 
 const RISK_COLORS = {
@@ -49,39 +49,39 @@ export function CSVDashboard({ insights, rows }) {
         <div className="card p-6">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Clients analysés</p>
-              <p className="mt-2 text-3xl font-bold text-slate-900">{insights.n_rows || 0}</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Clients analysés</p>
+              <p className="mt-2 text-3xl font-bold text-slate-900 dark:text-slate-100">{insights.n_rows || 0}</p>
             </div>
-            <Users className="h-10 w-10 text-blue-100" />
+            <Users className="h-10 w-10 text-blue-100 dark:text-blue-400/50" />
           </div>
         </div>
 
         <div className="card p-6">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Probabilité moyenne</p>
-              <p className="mt-2 text-3xl font-bold text-slate-900">{avgProbability}%</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Probabilité moyenne</p>
+              <p className="mt-2 text-3xl font-bold text-slate-900 dark:text-slate-100">{avgProbability}%</p>
             </div>
-            <TrendingUp className="h-10 w-10 text-amber-100" />
+            <TrendingUp className="h-10 w-10 text-amber-100 dark:text-amber-400/50" />
           </div>
         </div>
 
         <div className="card p-6">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Clients à haut risque</p>
-              <p className="mt-2 text-3xl font-bold text-slate-900">{insights.high_risk_count || 0}</p>
-              <p className="mt-1 text-xs text-slate-500">{highRiskRate}% du total</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Clients à haut risque</p>
+              <p className="mt-2 text-3xl font-bold text-slate-900 dark:text-slate-100">{insights.high_risk_count || 0}</p>
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{highRiskRate}% du total</p>
             </div>
-            <AlertTriangle className="h-10 w-10 text-red-100" />
+            <AlertTriangle className="h-10 w-10 text-red-100 dark:text-red-400/50" />
           </div>
         </div>
 
         <div className="card p-6">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-600">Risque global</p>
-              <p className="mt-2 text-3xl font-bold text-slate-900">
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Risque global</p>
+              <p className="mt-2 text-3xl font-bold text-slate-900 dark:text-slate-100">
                 {insights.risk_level_global === 'FAIBLE' && '✓'}
                 {insights.risk_level_global === 'MOYEN' && '!'}
                 {insights.risk_level_global === 'ÉLEVÉ' && '⚠'}
@@ -94,7 +94,7 @@ export function CSVDashboard({ insights, rows }) {
                 {insights.risk_level_global}
               </span>
             </div>
-            <Zap className="h-10 w-10 text-emerald-100" />
+            <Zap className="h-10 w-10 text-emerald-100 dark:text-emerald-400/50" />
           </div>
         </div>
       </div>
@@ -104,7 +104,7 @@ export function CSVDashboard({ insights, rows }) {
         {/* Risk Distribution Pie Chart */}
         {riskDistribution.length > 0 && (
           <div className="card p-6">
-            <h3 className="mb-4 font-bold text-slate-900">Distribution des risques</h3>
+            <h3 className="mb-4 font-bold text-slate-900 dark:text-slate-100">Distribution des risques</h3>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie data={riskDistribution} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
@@ -112,8 +112,8 @@ export function CSVDashboard({ insights, rows }) {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value) => `${value} clients`} />
-                <Legend />
+                <Tooltip formatter={(value) => `${value} clients`} contentStyle={{ backgroundColor: "var(--chart-tooltip-bg)", borderColor: "var(--chart-tooltip-border)", color: "var(--chart-axis)" }} />
+                <Legend formatter={(value) => <span style={{ color: "var(--chart-axis)" }}>{value}</span>} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -121,19 +121,19 @@ export function CSVDashboard({ insights, rows }) {
 
         {/* Top Drivers Bar Chart */}
         <div className="card p-6">
-          <h3 className="mb-4 font-bold text-slate-900">Facteurs principaux</h3>
+          <h3 className="mb-4 font-bold text-slate-900 dark:text-slate-100">Facteurs principaux</h3>
           {driversChartData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={driversChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
-                <YAxis />
-                <Tooltip formatter={(value) => Number(value).toFixed(4)} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
+                <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} tick={{ fill: "var(--chart-axis)", fontSize: 12 }} axisLine={{ stroke: "var(--chart-grid)" }} tickLine={{ stroke: "var(--chart-grid)" }} />
+                <YAxis tick={{ fill: "var(--chart-axis)", fontSize: 12 }} axisLine={{ stroke: "var(--chart-grid)" }} tickLine={{ stroke: "var(--chart-grid)" }} />
+                <Tooltip formatter={(value) => Number(value).toFixed(4)} contentStyle={{ backgroundColor: "var(--chart-tooltip-bg)", borderColor: "var(--chart-tooltip-border)", color: "var(--chart-axis)" }} />
                 <Bar dataKey="value" fill="#0ea5e9" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-sm text-slate-500">Aucun facteur dominant disponible</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Aucun facteur dominant disponible</p>
           )}
         </div>
       </div>
@@ -141,12 +141,12 @@ export function CSVDashboard({ insights, rows }) {
       {/* Recommendations */}
       {insights.recommendations && insights.recommendations.length > 0 && (
         <div className="card p-6">
-          <h3 className="mb-4 font-bold text-slate-900">Recommandations stratégiques</h3>
+          <h3 className="mb-4 font-bold text-slate-900 dark:text-slate-100">Recommandations stratégiques</h3>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {insights.recommendations.slice(0, 6).map((rec, idx) => (
-              <div key={idx} className="flex gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4">
+              <div key={idx} className="flex gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/30">
                 <span className="flex-shrink-0 font-bold text-blue-600">•</span>
-                <span className="text-sm text-slate-700">{rec}</span>
+                <span className="text-sm text-slate-700 dark:text-slate-200">{rec}</span>
               </div>
             ))}
           </div>
@@ -156,7 +156,7 @@ export function CSVDashboard({ insights, rows }) {
       {/* Data Table */}
       {rows && rows.length > 0 && (
         <div className="card p-6">
-          <h3 className="mb-4 font-bold text-slate-900">
+          <h3 className="mb-4 font-bold text-slate-900 dark:text-slate-100">
             Clients à risque élevé ({Math.min(rows.length, 200)} / {insights.n_rows} affichés)
           </h3>
           <div className="table-wrapper">
@@ -175,13 +175,8 @@ export function CSVDashboard({ insights, rows }) {
                 {rows.slice(0, 50).map((row, idx) => {
                   const riskPercent = row.churn_risk_percent ? parseFloat(row.churn_risk_percent).toFixed(1) : '0';
                   const riskLevel = row.risk_level || 'N/A';
-                  const bgColor = 
-                    riskLevel === 'FAIBLE' ? 'bg-emerald-50' :
-                    riskLevel === 'MOYEN' ? 'bg-amber-50' :
-                    'bg-red-50';
-
                   return (
-                    <tr key={idx} className={`${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}>
+                    <tr key={idx} className={`${idx % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-slate-50 dark:bg-slate-800/70'}`}>
                       <td className="font-medium">{row['Customer ID'] || '-'}</td>
                       <td className="font-semibold">{riskPercent}%</td>
                       <td>
@@ -203,7 +198,7 @@ export function CSVDashboard({ insights, rows }) {
             </table>
           </div>
           {rows.length > 50 && (
-            <p className="mt-3 text-xs text-slate-500">
+            <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
               Affichage des 50 premiers clients. Total: {rows.length} lignes.
             </p>
           )}
