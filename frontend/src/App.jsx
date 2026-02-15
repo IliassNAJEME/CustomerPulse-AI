@@ -186,9 +186,6 @@ export default function App() {
               loading={singleLoading}
               error={singleError}
             />
-            <div className="mt-6">
-              <PredictionResult result={singleResult} />
-            </div>
           </div>
 
           <div>
@@ -200,6 +197,12 @@ export default function App() {
             />
           </div>
         </div>
+
+        {singleResult && (
+          <div className="mt-8">
+            <PredictionResult result={singleResult} />
+          </div>
+        )}
 
         {csvInsights && (
           <div className="mt-8">

@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useRef } from 'react';
 import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { TrendingUp, Users, AlertTriangle, Zap } from 'lucide-react';
 
@@ -9,6 +10,28 @@ const RISK_COLORS = {
 
 export function CSVDashboard({ insights, rows }) {
   if (!insights) return null;
+
+  const hasLoggedDriversRef = useRef(false);
+  const driversRaw = Array.isArray(insights.global_top_drivers) ? insights.global_top_drivers : [];
+  const driversChartData = useMemo(
+    () =>
+      driversRaw
+        .map((driver) => ({
+          name: String(driver?.feature ?? ''),
+          value: Number(driver?.importance ?? 0),
+          interpretation: driver?.interpretation ?? '',
+        }))
+        .filter((driver) => driver.name && Number.isFinite(driver.value) && driver.value > 0)
+        .slice(0, 5),
+    [driversRaw]
+  );
+
+  useEffect(() => {
+    if (import.meta.env.DEV && !hasLoggedDriversRef.current) {
+      console.debug('[CSVDashboard] global_top_drivers received:', driversRaw);
+      hasLoggedDriversRef.current = true;
+    }
+  }, [driversRaw]);
 
   const riskDistribution = [
     { name: 'Faible risque', value: insights.segments?.low?.count || 0, color: RISK_COLORS.low },
@@ -97,20 +120,22 @@ export function CSVDashboard({ insights, rows }) {
         )}
 
         {/* Top Drivers Bar Chart */}
-        {insights.global_top_drivers && insights.global_top_drivers.length > 0 && (
-          <div className="card p-6">
-            <h3 className="mb-4 font-bold text-slate-900">Facteurs principaux</h3>
+        <div className="card p-6">
+          <h3 className="mb-4 font-bold text-slate-900">Facteurs principaux</h3>
+          {driversChartData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={insights.global_top_drivers.slice(0, 5)}>
+              <BarChart data={driversChartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="feature" angle={-45} textAnchor="end" height={100} />
+                <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
                 <YAxis />
-                <Tooltip />
-                <Bar dataKey="shap_value" fill="#0ea5e9" radius={[8, 8, 0, 0]} />
+                <Tooltip formatter={(value) => Number(value).toFixed(4)} />
+                <Bar dataKey="value" fill="#0ea5e9" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
-          </div>
-        )}
+          ) : (
+            <p className="text-sm text-slate-500">Aucun facteur dominant disponible</p>
+          )}
+        </div>
       </div>
 
       {/* Recommendations */}
